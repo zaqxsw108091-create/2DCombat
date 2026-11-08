@@ -35,7 +35,6 @@ public class EnemyHealth : BaseHealth, Idamageable
         // sound
         //SoundManager.Instance.PlaySFXClip(damageClip, 1f);
         PlayRandomSFX();
-        SoundManager.Instance.PlaySFXFromString("HurtClipName", 1f);
         //Effect
         SpawnDamageParticle(attackDirection);
 

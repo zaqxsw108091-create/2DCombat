@@ -29,23 +29,24 @@ public class UISkillSlot : UISlot
 
     private void OnValidate()
     {
-        gameObject.name = $"SkillTreeSlot_UI = {item.itemName}";
+        if (item != null) gameObject.name = $"SkillTreeSlot_UI = {item.itemName}";
     }
     private void UnlockSkillSlot()
     {
         if (unlocked) return;
 
+        // every slot in shouldBeUnlocked must already be unlocked
         for (int i = 0; i < shouldBeUnlocked.Length; i++)
         {
-            if (!shouldBeUnlocked[i].unlocked == false)
+            if (shouldBeUnlocked[i] != null && !shouldBeUnlocked[i].unlocked)
             {
                 return;
             }
         }
-
-        for (int i = 0; i < shouldBeUnlocked.Length; i++)
+        // every slot in shouldBelocked must still be locked (branch choice)
+        for (int i = 0; i < shouldBelocked.Length; i++)
         {
-            if (!shouldBeUnlocked[i].unlocked == true)
+            if (shouldBelocked[i] != null && shouldBelocked[i].unlocked)
             {
                 return;
             }

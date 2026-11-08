@@ -24,7 +24,7 @@ public class MouseDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (!canDrag) return;
 
         storage.SwapItem(slot);
-        dragInstance = new GameObject($"Drag(slot.name)");
+        dragInstance = new GameObject($"Drag({slot.name})");
         var image = dragInstance.AddComponent<Image>();
 
         image.sprite = slot.itemImage.sprite;
@@ -44,6 +44,9 @@ public class MouseDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // nothing was picked up (drag not allowed for this slot)
+        if (dragInstance == null) return;
+
         if(eventData.pointerCurrentRaycast.gameObject is GameObject target)
         {
             var targetSlot = target.GetComponentInParent<UISlot>();

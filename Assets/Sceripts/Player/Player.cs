@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 
 
@@ -9,7 +8,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 7.5f;
     [SerializeField] private float jumpPower = 7f;
-    [SerializeField] private float jumpTime = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float jumpCutMultiplier = 0.5f; // rise kept when the jump key is released early
 
     [SerializeField] private float extraHeight = 0.25f;
     [SerializeField] private LayerMask whatIsGround;
@@ -24,7 +23,6 @@ public class Player : MonoBehaviour
     private bool isjumping;
     private bool isfalling;
     private RaycastHit2D groundHit;
-    private float jumpTimeCounter;
 
     private Coroutine resetTrigger;
 
@@ -39,6 +37,11 @@ public class Player : MonoBehaviour
         coll = GetComponent<Collider2D>();
         trailRenderer = GetComponentInChildren<TrailRenderer>();
         DashSkill.OnSkillUsed += Dashing;
+    }
+
+    private void OnDestroy()
+    {
+        DashSkill.OnSkillUsed -= Dashing;
     }
 
     private void Update()
@@ -120,40 +123,32 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        // 플레이어가 점프키 입력 
+        var jump = InputUser.Instance.control.Jumping.Jump;
 
-        if(InputUser.Instance.control.Jumping.Jump.WasPerformedThisFrame() && IsGrounded())
+        // Jump starts only on the key PRESS while grounded.
+        if (jump.WasPressedThisFrame() && IsGrounded())
         {
             isjumping = true;
-            jumpTimeCounter = jumpTime;
-            rigid.velocity = new Vector2( rigid.velocity.x, jumpPower);
+            isfalling = false;
+            rigid.velocity = new Vector2(rigid.velocity.x, jumpPower);
         }
-        // 플레이어의 대점프 
-        if (InputUser.Instance.control.Jumping.Jump.IsPressed())
-        {
 
-
-            if (jumpTimeCounter > 0 && isjumping)
-            { 
-                rigid.velocity = new Vector2(rigid.velocity.x, jumpPower);
-                 jumpTimeCounter -= Time.deltaTime;
-            }
-            else if(jumpTimeCounter == 0)
-            {
-                isjumping = false;
-                isfalling = true;
-            }
-            else
-            {
-                isjumping = false;
-            }
-        }
-        if(InputUser.Instance.control.Jumping.Jump.WasPerformedThisFrame())
+        // Variable jump height: releasing the key while still rising cuts the rise,
+        // so a short tap jumps lower and a held key reaches the same max height as before.
+        if (isjumping && jump.WasReleasedThisFrame())
         {
+            if (rigid.velocity.y > 0f)
+                rigid.velocity = new Vector2(rigid.velocity.x, rigid.velocity.y * jumpCutMultiplier);
             isjumping = false;
             isfalling = true;
         }
 
+        // Reached the top of the jump.
+        if (isjumping && rigid.velocity.y <= 0f)
+        {
+            isjumping = false;
+            isfalling = true;
+        }
     }
     private bool CheckForLand()
     {

@@ -23,7 +23,8 @@ public class UISlot : MonoBehaviour
     {
         if (item == null)
         {
-            itemImage.sprite = null;    
+            itemImage.sprite = null;
+            return;
         }
         itemImage.sprite = item.iconImage;
     }

@@ -14,7 +14,8 @@ public class UISkillTreeStorage : Storage
             slot.SetupStorage(this);
             slot.SetupMouseDrag(this);
 
-            if (slot.Unlocked)
+            // only unlocked skills can be dragged to the hotbar
+            if (!slot.Unlocked)
                 slot.LockMouseDrag();
         }
     }

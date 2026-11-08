@@ -1697,8 +1697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemImage: {fileID: 158867177}
-  shouldBeUnlocked:
-  - {fileID: 1001204914}
+  shouldBeUnlocked: []
   shouldBelocked:
   - {fileID: 1071444602}
   item: {fileID: 11400000, guid: 19980ec588e7d124abf5e5ae47881378, type: 2}
@@ -11015,7 +11014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &867101224
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22811,7 +22810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2030941906
 MonoBehaviour:
   m_ObjectHideFlags: 0
